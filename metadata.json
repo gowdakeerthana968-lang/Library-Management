@@ -1,0 +1,6 @@
+{
+  "name": "Athenaeum Library Management System",
+  "description": "Full-stack library management portal for students, book inventory, and circulation tracking backed by PostgreSQL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
