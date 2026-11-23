@@ -207,6 +207,10 @@ async function handleReturnBook(req: express.Request, res: express.Response) {
 app.post('/api/borrows/:borrow_id/return', handleReturnBook);
 app.patch('/api/borrows/:borrow_id/return', handleReturnBook);
 
+app.use('/api', (_req, res) => {
+  res.status(404).json({ error: 'API endpoint not found.' });
+});
+
 async function startServer() {
   if (process.env.DATABASE_URL?.trim()) {
     try {
@@ -224,7 +228,8 @@ async function startServer() {
     );
   }
 
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd =
+    process.env.NODE_ENV === 'production' || process.argv.includes('--prod');
 
   if (!isProd) {
     const { createServer: createViteServer } = await import('vite');
@@ -241,14 +246,16 @@ async function startServer() {
       if (fs.existsSync(indexFile)) {
         res.sendFile(indexFile);
       } else {
-        res.status(404).send('Build output not found.');
+        res.status(404).send('Build output not found. Run npm run build first.');
       }
     });
   }
 
   const port = Number(process.env.PORT) || 3000;
   app.listen(port, '0.0.0.0', () => {
-    console.log(`Athenaeum server running on http://0.0.0.0:${port}`);
+    console.log(
+      `Athenaeum full-stack server (${isProd ? 'production' : 'development'}) running on http://0.0.0.0:${port}`,
+    );
   });
 }
 
